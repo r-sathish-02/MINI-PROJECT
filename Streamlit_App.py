@@ -19,9 +19,24 @@ else:
 st.sidebar.title("Knowledge Navigator")
 menu = st.sidebar.selectbox(
     "Choose a Feature",
-    ["MCQ Generator", "PDF Q&A System", "CSV Visualization", "Research Bot", "Q&A Evaluator",
+    ["Home", "MCQ Generator", "PDF Q&A System", "CSV Visualization", "Research Bot", "Q&A Evaluator",
      "Study Plan Generator", "Interactive Quiz", "Concept Map Generator", "Topic Summary Generator"]
 )
+
+# Home page function
+def home_page():
+    st.title("Welcome to Knowledge Navigator")
+    st.write("""
+    Knowledge Navigator is your AI-powered educational assistant! It provides a range of tools for both students and teachers, 
+    including MCQ generation, PDF-based Q&A generation, CSV data visualization, and personalized study plans.
+    Here’s what you can do with Knowledge Navigator:
+    - Generate MCQs from any text for effective revision.
+    - Upload PDFs and get automated Q&A.
+    - Visualize CSV data files easily.
+    - Use the Research Bot to get answers to your academic queries.
+    - Create personalized study plans and take interactive quizzes.
+    """)
+    st.write("Navigate to different features using the sidebar to explore the various functionalities.")
 
 # Function to generate MCQs
 def generate_mcqs(text, num_mcqs, subject):
@@ -40,7 +55,7 @@ def generate_mcqs(text, num_mcqs, subject):
 
 # Function to handle PDF Q&A
 def extract_text_from_pdf(pdf_file):
-    reader = PyPDF2.PdfReader(pdf_file)  # Updated to PdfReader
+    reader = PyPDF2.PdfReader(pdf_file)
     text = ""
     for page_num in range(len(reader.pages)):
         text += reader.pages[page_num].extract_text()
@@ -62,19 +77,11 @@ def generate_qa_from_pdf(text):
 
 # Function to handle CSV Visualization
 def visualize_csv(csv_file):
-    # Load the CSV into a DataFrame
     df = pd.read_csv(csv_file)
-    
-    # Display the DataFrame
     st.write(df)
-
-    # Select only the numerical columns for visualization
     numeric_columns = df.select_dtypes(include=["float", "int"]).columns.tolist()
-
     if numeric_columns:
-        # Let the user select which numerical columns they want to plot
         selected_columns = st.multiselect("Select columns to visualize", numeric_columns, default=numeric_columns)
-
         if selected_columns:
             st.line_chart(df[selected_columns])
         else:
@@ -102,7 +109,6 @@ def qa_evaluator(file):
     st.write("Q&A Evaluator is under construction.")
 
 # Function to generate personalized study plan
-# Function to generate personalized study plan
 def study_plan_generator():
     st.title("Personalized Study Plan Generator")
     name = st.text_input("Name")
@@ -119,7 +125,6 @@ def study_plan_generator():
             st.write(f"Study {study_hours} hours every day:")
             for subject in subjects:
                 st.write(f"- {subject}: {study_hours / len(subjects):.2f} hours per day")
-
 
 # Function for interactive quiz
 def interactive_quiz():
@@ -177,9 +182,10 @@ def topic_summary_generator():
             except Exception as e:
                 st.error(f"Error: {e}")
 
-
 # Choose feature based on sidebar menu
-if menu == "MCQ Generator":
+if menu == "Home":
+    home_page()
+elif menu == "MCQ Generator":
     st.header("Generate MCQs")
     text_input = st.text_area("Enter text for MCQ generation:")
     num_mcqs = st.slider("Number of MCQs", 1, 10, 5)
@@ -191,7 +197,6 @@ if menu == "MCQ Generator":
             st.write(mcqs)
         else:
             st.warning("Please enter text and subject.")
-
 elif menu == "PDF Q&A System":
     st.header("Upload PDF for Q&A Generation")
     pdf_file = st.file_uploader("Upload PDF file", type=["pdf"])
@@ -200,14 +205,12 @@ elif menu == "PDF Q&A System":
         st.subheader("Generated Questions and Answers")
         qa = generate_qa_from_pdf(text)
         st.write(qa)
-
 elif menu == "CSV Visualization":
     st.header("Upload CSV for Data Visualization")
     csv_file = st.file_uploader("Upload CSV file", type=["csv"])
     if csv_file:
         st.subheader("Data Visualization")
         visualize_csv(csv_file)
-
 elif menu == "Research Bot":
     st.header("Research Bot")
     query = st.text_input("Enter your research question:")
@@ -216,22 +219,17 @@ elif menu == "Research Bot":
             answer = research_bot_query(query)
             st.subheader("Research Bot Answer")
             st.write(answer)
-
 elif menu == "Q&A Evaluator":
     st.header("Upload a file for Q&A Evaluation (PDF or Image)")
     file = st.file_uploader("Upload PDF or Image", type=["pdf", "jpg", "png"])
     if file:
         st.subheader("Evaluation Results")
         qa_evaluator(file)
-
 elif menu == "Study Plan Generator":
     study_plan_generator()
-
 elif menu == "Interactive Quiz":
     interactive_quiz()
-
 elif menu == "Concept Map Generator":
     concept_map_generator()
-
 elif menu == "Topic Summary Generator":
     topic_summary_generator()
