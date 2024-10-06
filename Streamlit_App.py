@@ -26,7 +26,7 @@ menu = st.sidebar.selectbox(
 def generate_mcqs(text, num_mcqs, subject):
     try:
         response = openai.ChatCompletion.create(
-            model="gpt-4",
+            model="gpt-4o",
             messages=[
                 {"role": "system", "content": "You are an expert MCQ maker."},
                 {"role": "user", "content": f"Generate {num_mcqs} MCQs on {subject} based on the following text: {text}"}
