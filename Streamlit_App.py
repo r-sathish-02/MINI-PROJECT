@@ -102,12 +102,13 @@ def qa_evaluator(file):
     st.write("Q&A Evaluator is under construction.")
 
 # Function to generate personalized study plan
+# Function to generate personalized study plan
 def study_plan_generator():
     st.title("Personalized Study Plan Generator")
     name = st.text_input("Name")
     study_hours = st.slider("How many hours can you study per day?", 1, 12, 3)
     subjects = st.multiselect("Select the subjects you want to study", 
-                              ["Math", "Science", History", "Language", "Arts"])
+                              ["Math", "Science", "History", "Language", "Arts"])
     deadline = st.date_input("Select the date of your next exam")
 
     if st.button("Generate Study Plan"):
@@ -118,6 +119,7 @@ def study_plan_generator():
             st.write(f"Study {study_hours} hours every day:")
             for subject in subjects:
                 st.write(f"- {subject}: {study_hours / len(subjects):.2f} hours per day")
+
 
 # Function for interactive quiz
 def interactive_quiz():
@@ -163,12 +165,18 @@ def topic_summary_generator():
     text = st.text_area("Enter text for summary")
     if st.button("Generate Summary"):
         if text:
-            response = openai.Completion.create(
-                engine="gpt-4o",
-                prompt=f"Summarize the following text: {text}",
-                max_tokens=150
-            )
-            st.write(response.choices[0].text)
+            try:
+                response = openai.ChatCompletion.create(
+                    model="gpt-4o",
+                    messages=[
+                        {"role": "system", "content": "You are an expert summarizer."},
+                        {"role": "user", "content": f"Summarize the following text: {text}"}
+                    ]
+                )
+                st.write(response.choices[0].message['content'])
+            except Exception as e:
+                st.error(f"Error: {e}")
+
 
 # Choose feature based on sidebar menu
 if menu == "MCQ Generator":
