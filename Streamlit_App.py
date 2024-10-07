@@ -13,7 +13,7 @@ openai.api_key = os.getenv("OPENAI_API_KEY")
 if not openai.api_key:
     st.error("OpenAI API key not found. Please check the .env file.")
 else:
-    st.write("OpenAI API key loaded successfully")
+    st.write(" ")
 
 # Main App
 st.sidebar.title("Knowledge Navigator")
